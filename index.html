@@ -2115,11 +2115,24 @@ function fixCaseCounts(depts){
       extractPackSize(item);
       var upc=item.unitsPerCase||1;
       var dT=item.deliveryTotal||0;
+      // Fix case counts stored as units
       if(upc>1&&dT>0&&Number.isInteger(dT)&&dT<=200&&item.total===dT){
         var newQty=Math.round(dT*upc);
         item.total=newQty;
         item.deliveryTotal=newQty;
         fixed++;
+      }
+      // Fix soldTotal if it incorrectly has delivery data
+      // soldTotal should never be > deliveryTotal
+      if((item.soldTotal||0)>0&&item.deliveryTotal===0&&item.total===0){
+        // soldTotal has data that should be in deliveryTotal - fix it
+        var sT=item.soldTotal;
+        if(upc>1&&Number.isInteger(sT)&&sT<=200){
+          item.deliveryTotal=Math.round(sT*upc);
+          item.total=item.deliveryTotal;
+          item.soldTotal=0;
+          fixed++;
+        }
       }
     });
   });
@@ -3093,7 +3106,7 @@ Skip items with 0 shipped. UPC is below description on Reisinger invoices.`}
 }
 
 function extractTableRows(all){
-  var rows=[];var seen=new Set();
+  var rows=[];var seen=new Set();var rowMap={};
   var yMap={};
   all.forEach(function(t){var yk=Math.round(t.y/8)*8;if(!yMap[yk])yMap[yk]=[];yMap[yk].push(t);});
   var sortedYs=Object.keys(yMap).map(Number).sort(function(a,b){return b-a;});
@@ -3173,7 +3186,15 @@ function extractTableRows(all){
     }
     if(sizeStr&&desc)desc=desc+' '+sizeStr;
     if(!desc)desc=upcTok.str;
-    rows.push({name:desc,upc:upcTok.str,qty:qty,casesReceived:casesReceived,unitsPerCase:unitsPerCase,isWeight:isWeight,sizeStr:sizeStr});
+    // Combine duplicate UPCs (same item appears twice on invoice)
+    if(rowMap[upcTok.str]){
+      rowMap[upcTok.str].qty+=qty;
+      rowMap[upcTok.str].casesReceived+=casesReceived;
+    } else {
+      var row={name:desc,upc:upcTok.str,qty:qty,casesReceived:casesReceived,unitsPerCase:unitsPerCase,isWeight:isWeight,sizeStr:sizeStr};
+      rowMap[upcTok.str]=row;
+      rows.push(row);
+    }
   }
   return rows;
 }
@@ -3208,12 +3229,11 @@ function applyInvoiceRows(rows,el,refOnly){
     }
 
     if(!refOnly){
-      // ADD delivery to existing ON HAND
-      // Old inventory + new delivery = accurate total count
-      item.total=(item.total||0)+r.qty;
       item.deliveryTotal=(item.deliveryTotal||0)+r.qty;
+      item.total=(item.total||0)+r.qty;
       if(item.isWeightItem)item.deliveryLbs=(item.deliveryLbs||0)+r.qty;
       if(r.unitsPerCase&&r.unitsPerCase>1)item.unitsPerCase=r.unitsPerCase;
+      // Never touch soldTotal from delivery upload
       logEntries.push({name:item.name,qty:r.qty});
     }
 
