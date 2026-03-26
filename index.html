@@ -294,12 +294,14 @@ td{padding:8px 11px;font-size:11px;vertical-align:middle}
 @media (max-width: 768px) {
   body { font-size: 14px; padding-bottom: 70px; }
   .sidebar { display: none !important; }
-  .app-wrap { flex-direction: column; height: auto; }
-  .main-wrap { width: 100%; }
+  .app-wrap { flex-direction: column; height: auto; overflow: visible; }
+  .main-wrap { width: 100%; overflow: visible; }
   .content-topbar { display: none; }
-  .split-view { flex-direction: column; }
-  .split-inv { border-right: none; }
-  .split-ord { display: none; }
+  .split-view { flex-direction: column; overflow: visible; }
+  .split-inv { border-right: none; overflow: visible; padding: 10px 12px; }
+  .split-ord { overflow: visible; padding: 10px 12px; border-top: 1px solid #1e1530; display: none; }
+  .split-ord.mob-show { display: block !important; }
+  .split-inv.mob-hide { display: none !important; }
   .top-hdr { display: none; }
   .logo-sub { display: none; }
   .mob-topbar { display: flex !important; align-items:center; gap:8px; padding:6px 12px;
@@ -324,12 +326,17 @@ td{padding:8px 11px;font-size:11px;vertical-align:middle}
   .twrap { overflow-x: auto; }
   th, td { font-size: 10px; padding: 6px 8px; }
   .boh-btn { display: flex !important; }
+  .mob-dept-bar { display: flex !important; overflow-x: auto; background: #1a1020; border-bottom: 1px solid #2e1525; padding: 0 8px; gap: 0; }
+  .mob-dept-bar .mdt { cursor:pointer; padding: 8px 12px; font-size: 11px; color: #888; white-space: nowrap; border-bottom: 2px solid transparent; font-family: 'DM Mono', monospace; }
+  .mob-dept-bar .mdt.active { color: #fff; border-bottom-color: var(--dc, #ff4444); }
+  .multi-bar { position: fixed; bottom: 56px; left: 0; right: 0; z-index: 50; }
 }
 
 @media (min-width: 769px) {
   .mobile-cards { display: none !important; }
   .mob-nav { display: none !important; }
   .mob-topbar { display: none !important; }
+  .mob-dept-bar { display: none !important; }
   .boh-btn { display: none !important; }
   .desktop-table { display: block !important; }
 }
@@ -409,6 +416,7 @@ td{padding:8px 11px;font-size:11px;vertical-align:middle}
 
 /* MOB TOPBAR */
 .mob-topbar { display: none; }
+.mob-dept-bar { display: none; }
 
 
 /* ══ WEIGHT ITEMS ════════════════════════════════════════════════════════════ */
@@ -485,14 +493,17 @@ td{padding:8px 11px;font-size:11px;vertical-align:middle}
 <!-- MOBILE TOP BAR -->
 <div class="mob-topbar">
   <div class="logo" style="font-family:'Syne',sans-serif;font-size:16px;font-weight:800">
-    STOCK<em style="color:var(--dc,#00e676)">CTRL</em>
+    STOCK<em style="color:#FFD700">CTRL</em>
   </div>
   <div style="margin-left:auto;display:flex;gap:6px;align-items:center">
     <div class="mob-sync" id="mobSyncTxt">●</div>
     <button class="btn btn-gh btn-xs" onclick="manualSync()" style="padding:4px 8px">↻</button>
-    <button class="btn btn-g btn-xs" onclick="openAdd()" style="padding:6px 10px">+ ADD</button>
+    <button class="btn btn-g btn-xs" onclick="openAdd()" style="padding:6px 10px;background:#FFD700;color:#4a1b0c">+ ADD</button>
   </div>
 </div>
+
+<!-- MOBILE DEPT TABS -->
+<div class="mob-dept-bar" id="mobDeptBar"></div>
 
 <!-- BOTTOM NAV -->
 <div class="mob-nav" id="mobNav">
@@ -1473,6 +1484,14 @@ function renderDeptTabs(){
     const low=dept.items.filter(i=>getStatus(i,dept)!=='OK').length;
     cnt.innerHTML=`${dept.items.length} items${low?` · <span style="color:#ffab00">${low} alerts</span>`:''}`;
   }
+  // Mobile dept tabs
+  const mobBar=document.getElementById('mobDeptBar');
+  if(mobBar){
+    mobBar.innerHTML=depts.map(d=>{
+      const isActive=String(d.id)===String(activeDeptId);
+      return`<div class="mdt ${isActive?'active':''}" style="--dc:${d.color}" onclick="switchDept('${d.id}')">${esc(d.name)} <span style="font-size:8px;color:#555">${d.items.length}</span></div>`;
+    }).join('');
+  }
 }
 
 function applyColor(c){document.documentElement.style.setProperty('--dc',c);}
@@ -1652,7 +1671,9 @@ function orderHTML(dept){
       const scDelOpts=DNAMES.map((n,i)=>`<option value="${i}" ${i===sc.deliveryDay?'selected':''}>${n}</option>`).join('');
       const cover=getCoverageDays(sc.deliveryDay,dept);
       return`<div class="sched-subcat-row">
-        <span style="color:#9099c0;min-width:50px">${esc(sc.name)}</span>
+        <input type="text" value="${esc(sc.name)}" style="background:#1a1d2e;border:1px solid #2e3350;border-radius:4px;color:#9099c0;font-family:'DM Mono',monospace;font-size:10px;padding:3px 8px;width:90px"
+          onchange="updateSubCat('${dept.id}','${slot.id}',${sci},'name',this.value)"
+          onblur="updateSubCat('${dept.id}','${slot.id}',${sci},'name',this.value)"/>
         <span class="sched-arrow">→</span>
         <select class="sched-select" onchange="updateSubCat('${dept.id}','${slot.id}',${sci},'deliveryDay',this.value)">${scDelOpts}</select>
         <span class="sched-cover">${cover}d</span>
@@ -1985,6 +2006,7 @@ function printOrderGuide(deptId){
   .mobile-cards { display: none !important; }
   .mob-nav { display: none !important; }
   .mob-topbar { display: none !important; }
+  .mob-dept-bar { display: none !important; }
   .boh-btn { display: none !important; }
   .desktop-table { display: block !important; }
 }
@@ -2064,6 +2086,7 @@ function printOrderGuide(deptId){
 
 /* MOB TOPBAR */
 .mob-topbar { display: none; }
+.mob-dept-bar { display: none; }
 
 </style>
 
@@ -2127,7 +2150,7 @@ function printOrderGuide(deptId){
 function addSlot(deptId){
   const dept=depts.find(d=>String(d.id)===String(deptId));if(!dept)return;
   if(!dept.schedule)dept.schedule=[];
-  dept.schedule.push({id:'s'+uid(),orderDay:2,orderTime:'10:00 AM',subCats:[{name:'Meat',deliveryDay:5},{name:'Chicken',deliveryDay:1}]});
+  dept.schedule.push({id:'s'+uid(),orderDay:2,orderTime:'10:00 AM',subCats:[]});
   dept.view='order'; // stay on order guide
   scheduleDriveSync();renderMain();renderBanner();
 }
@@ -2158,10 +2181,9 @@ function addSubCat(deptId,slotId){
   const dept=depts.find(d=>String(d.id)===String(deptId));if(!dept)return;
   const slot=(dept.schedule||[]).find(s=>s.id===slotId);if(!slot)return;
   if(!slot.subCats)slot.subCats=[];
-  const names=['Meat','Chicken','Pork','Seafood','Deli','Other'];
-  const existing=slot.subCats.map(sc=>sc.name);
-  const next=names.find(n=>!existing.includes(n))||'Category '+(slot.subCats.length+1);
-  slot.subCats.push({name:next,deliveryDay:1});
+  const name=prompt('Enter sub-category name (e.g. Meat, Chicken, Dairy, Drinks):','');
+  if(!name||!name.trim())return;
+  slot.subCats.push({name:name.trim(),deliveryDay:1});
   dept.view='order';
   scheduleDriveSync();renderMain();renderBanner();
 }
@@ -4416,26 +4438,32 @@ let bohItemId = null, bohDeptId = null;
 function mobNav(tab){
   ['inv','ord','up','log'].forEach(t=>{
     const btn=document.getElementById('mn'+t.charAt(0).toUpperCase()+t.slice(1));
-    if(btn) btn.classList.toggle('active', t===tab||
-      (t==='inv'&&tab==='inv')||(t==='ord'&&tab==='order')||(t==='up'&&tab==='upload')||(t==='log'&&tab==='log'));
+    if(btn) btn.classList.toggle('active', false);
   });
   document.getElementById('mnInv').classList.toggle('active', tab==='inv');
   document.getElementById('mnOrd').classList.toggle('active', tab==='order');
   document.getElementById('mnUp').classList.toggle('active', tab==='upload');
   document.getElementById('mnLog').classList.toggle('active', tab==='log');
 
-  const main=document.getElementById('mainArea');
+  const invPanel=document.getElementById('mainArea');
+  const ordPanel=document.getElementById('orderArea');
   const uploadPanel=document.getElementById('mobUploadPanel');
 
+  // Reset all panels
+  if(invPanel) { invPanel.classList.remove('mob-hide'); invPanel.style.display=''; }
+  if(ordPanel) { ordPanel.classList.remove('mob-show'); }
+  if(uploadPanel) uploadPanel.style.display='none';
+
   if(tab==='upload'){
-    main.style.display='none';
-    uploadPanel.style.display='block';
+    if(invPanel) invPanel.classList.add('mob-hide');
+    if(uploadPanel) uploadPanel.style.display='block';
+  } else if(tab==='order'){
+    if(invPanel) invPanel.classList.add('mob-hide');
+    if(ordPanel) ordPanel.classList.add('mob-show');
+  } else if(tab==='log'){
+    toggleLog();
   } else {
-    main.style.display='';
-    uploadPanel.style.display='none';
-    if(tab==='order') setView('order');
-    else if(tab==='inv') setView('inventory');
-    else if(tab==='log') { setView('inventory'); toggleLog(); }
+    // inv — default, just show inventory
   }
 }
 
