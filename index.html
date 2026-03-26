@@ -3747,13 +3747,13 @@ function applyPDF(){
   let newlyAdded=0;
   rows.forEach(r=>{
     let item=dept.items.find(i=>i.name.toLowerCase()===r.name.toLowerCase());
-    // AUTO-ADD: if item not found, create it automatically (delivery + throwaway)
-    if(!item&&(suType==='delivery'||suType==='throwaway')){
+    // AUTO-ADD: if item not found, create it automatically
+    if(!item){
       const pdfRow=pdfRows?pdfRows.find(pr=>pr.desc&&pr.desc.toLowerCase()===r.name.toLowerCase()):null;
       item={id:uid(),name:r.name,upc:pdfRow?pdfRow.upc:'',
         shelfMin:0,backstockMin:0,total:0,
-        deliveryTotal:0,throwawayTotal:0,soldTotal:0,
-        manualWeeklyAvg:null,salesHistory:[]};
+        deliveryTotal:0,casesReceived:0,throwawayTotal:0,soldTotal:0,
+        deliveryLbs:0,soldLbs:0,manualWeeklyAvg:null,salesHistory:[]};
       dept.items.push(item);
       newlyAdded++;
     }
