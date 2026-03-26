@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="apple-mobile-web-app-title" content="STOCKCTRL"/>
-<meta name="theme-color" content="#1a1d2e"/>
+<meta name="theme-color" content="#8B1A1A"/>
 <link rel="manifest" href="data:application/json,{
   %22name%22:%22STOCKCTRL%22,
   %22short_name%22:%22STOCKCTRL%22,
@@ -26,32 +26,78 @@ body{font-family:'DM Mono','Courier New',monospace;background:#1e2132;color:#e8e
 ::-webkit-scrollbar-track{background:#1e2132}
 ::-webkit-scrollbar-thumb{background:#22273a;border-radius:2px}
 
-/* TOP HEADER */
-.top-hdr{background:#262a3d;border-bottom:1px solid #2e3350;padding:11px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:30;gap:10px;flex-wrap:wrap}
-.logo{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;letter-spacing:-.02em;color:#fff}
-.logo em{font-style:normal}
-.logo-sub{font-size:8px;color:#9099c0;letter-spacing:.2em;margin-top:1px}
-.hdr-center{display:flex;align-items:center;gap:8px;flex:1;justify-content:center}
-.hdr-right{display:flex;gap:7px;align-items:center}
-.store-badge{font-size:8px;color:#282d40;letter-spacing:.12em;padding:3px 9px;border:1px solid #2e3350;border-radius:3px}
+/* APP LAYOUT — SIDEBAR + MAIN */
+.app-wrap{display:flex;height:100vh;overflow:hidden}
+.sidebar{width:200px;background:#110e18;border-right:1px solid #1e1530;display:flex;flex-direction:column;overflow-y:auto;flex-shrink:0}
+.sb-logo{padding:14px 16px 10px;border-bottom:1px solid #1e1530}
+.sb-sync{padding:8px 12px;border-bottom:1px solid #1e1530;display:flex;align-items:center;gap:6px}
+.sb-label{font-size:7px;color:#444;letter-spacing:.15em;padding:12px 16px 4px}
+.sb-depts{display:flex;flex-direction:column;gap:0}
+.sb-dept{cursor:pointer;padding:7px 16px;display:flex;justify-content:space-between;align-items:center;font-size:11px;color:#888;transition:all .15s;border-left:2px solid transparent}
+.sb-dept:hover{color:#ddd;background:#ffffff06}
+.sb-dept.active{color:#fff;background:#ffffff08;border-left-color:var(--dc,#ff4444)}
+.sb-dept-count{font-size:9px;color:#555}
+.sb-dept.active .sb-dept-count{color:#ff8888}
+.sb-dept-alerts{font-size:7px;color:#ff6b6b;margin-left:4px}
+.sb-dept-edit{display:none;background:none;border:none;cursor:pointer;font-size:9px;color:#444;padding:0 2px}
+.sb-dept:hover .sb-dept-edit{display:inline}
+.sb-dept-edit:hover{color:#fff!important}
+.sb-divider{border-top:1px solid #1e1530;margin:6px 0}
+.sb-actions{display:flex;flex-direction:column;gap:0;padding:0 0 4px}
+.sb-act{cursor:pointer;padding:6px 16px;background:none;border:none;text-align:left;font-family:'DM Mono',monospace;font-size:10px;color:#888;transition:all .15s}
+.sb-act:hover{color:#ddd;background:#ffffff06}
+.sb-act-grn{color:#4ade80}.sb-act-grn:hover{color:#6afe9a;background:#4ade8008}
+.sb-act-org{color:#ff6b35}.sb-act-org:hover{color:#ff8855;background:#ff6b3508}
+.sb-act-blu{color:#40c4ff}.sb-act-blu:hover{color:#60d4ff;background:#40c4ff08}
+.main-wrap{flex:1;display:flex;flex-direction:column;overflow:hidden}
+
+/* CONTENT TOP BAR */
+.content-topbar{background:#8B1A1A;padding:8px 16px;display:flex;align-items:center;gap:12px;flex-shrink:0}
+.ct-left{display:flex;align-items:center;gap:8px}
+.ct-dept{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:#fff}
+.ct-count{font-size:9px;color:#ffb8b8}
+.ct-center{flex:1;display:flex;gap:6px;align-items:center;justify-content:center;flex-wrap:wrap}
+.ct-right{display:flex;gap:6px}
+
+/* SPLIT VIEW */
+.split-view{display:flex;flex:1;overflow:hidden}
+.split-inv{flex:1;overflow-y:auto;padding:12px 16px;border-right:1px solid #1e1530}
+.split-ord{flex:1;overflow-y:auto;padding:12px 16px}
+
+/* TOP HEADER — hidden in sidebar layout */
+.top-hdr{display:none}
+.dept-bar{display:none}
+.del-bar_old{display:none}
 
 /* SYNC STATUS */
-.sync-wrap{display:flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;border:1px solid #1e2330;background:#252838;cursor:default}
-.sync-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.sync-wrap{display:flex;align-items:center;gap:4px;padding:3px 8px;border-radius:12px;border:1px solid #1e1530;background:#0c0a12;cursor:default;flex:1}
+.sync-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
 .sync-dot.synced{background:#00e676}
 .sync-dot.syncing{background:#ffab00;animation:blink .7s infinite}
 .sync-dot.error{background:#ff3344}
 .sync-dot.offline{background:#444}
 .sync-dot.none{background:#2a2f40}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
-.sync-txt{font-size:8px;letter-spacing:.08em;color:#c0c4d8}
-.sync-time{font-size:7px;color:#2a2f40;margin-left:2px}
-.sync-btn{cursor:pointer;background:#252838;border:1px solid #22273a;border-radius:4px;color:#555;font-family:'DM Mono',monospace;font-size:10px;padding:4px 10px;transition:all .15s;white-space:nowrap}
-.sync-btn:hover{border-color:#8890b0;color:#ffffff;transform:translateY(-1px)}
+.sync-txt{font-size:7px;letter-spacing:.06em;color:#888}
+.sync-time{font-size:7px;color:#555;margin-left:2px}
+.sync-btn{cursor:pointer;background:#0c0a12;border:1px solid #1e1530;border-radius:4px;color:#666;font-family:'DM Mono',monospace;font-size:9px;padding:3px 8px;transition:all .15s;white-space:nowrap}
+.sync-btn:hover{border-color:#444;color:#fff}
 .sync-btn.spinning{animation:spin 1s linear infinite;pointer-events:none}
 
-/* DEPT TABS */
-.dept-bar{background:#262a3d;border-bottom:2px solid #2e3350;padding:0 20px;display:flex;align-items:stretch;position:sticky;top:49px;z-index:29;overflow-x:auto}
+/* LAYOUT — override old */
+.layout{display:flex;height:auto}
+.main{flex:1;overflow:auto;padding:0}
+
+/* VIEW TABS — hidden in split view */
+.vtabs{display:none}
+
+/* LOGO */
+.logo{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;letter-spacing:-.02em;color:#fff}
+.logo em{font-style:normal}
+.logo-sub{font-size:7px;color:#ffb8b8;letter-spacing:.18em;margin-top:2px}
+
+/* DELIVERY BANNER — inline in top bar */
+.del-bar{display:flex;gap:6px;align-items:center;font-size:9px;flex-wrap:wrap}
 .dept-tab{cursor:pointer;padding:9px 16px;border:none;border-bottom:3px solid transparent;background:transparent;color:#9099c0;font-family:'DM Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.07em;transition:all .2s;white-space:nowrap;display:flex;align-items:center;gap:6px;margin-bottom:-2px}
 .dept-tab:hover:not(.active){color:#d0d4e8;background:#ffffff05}
 .dept-tab.active{color:#fff;border-bottom-color:var(--dc)}
@@ -67,7 +113,7 @@ body{font-family:'DM Mono','Courier New',monospace;background:#1e2132;color:#e8e
 .dept-add-btn:hover{color:#ffffff}
 
 /* DELIVERY BANNER */
-.del-bar{background:#262a3d;border-bottom:1px solid #2e3350;padding:6px 20px;display:flex;align-items:center;gap:10px;font-size:9px;flex-wrap:wrap;min-height:34px}
+.del-bar{background:#1a1020;border-bottom:1px solid #2e1525;padding:6px 20px;display:flex;align-items:center;gap:10px;font-size:9px;flex-wrap:wrap;min-height:34px}
 .del-chip{padding:2px 9px;border-radius:20px;border:1px solid;font-size:8px;font-weight:600;letter-spacing:.07em}
 .chip-order{background:#ffab0010;border-color:#ffab0040;color:#ffab00}
 .chip-delivery{background:#00e67610;border-color:#00e67640;color:#00e676}
@@ -247,63 +293,36 @@ td{padding:8px 11px;font-size:11px;vertical-align:middle}
 /* ══ MOBILE ══════════════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
   body { font-size: 14px; padding-bottom: 70px; }
-
-  /* Header — compact on mobile */
-  .top-hdr { padding: 8px 12px; gap: 6px; flex-wrap: nowrap; }
-  .logo { font-size: 16px; }
+  .sidebar { display: none !important; }
+  .app-wrap { flex-direction: column; height: auto; }
+  .main-wrap { width: 100%; }
+  .content-topbar { display: none; }
+  .split-view { flex-direction: column; }
+  .split-inv { border-right: none; }
+  .split-ord { display: none; }
+  .top-hdr { display: none; }
   .logo-sub { display: none; }
-  .hdr-center { display: none; }
-  .hdr-right { gap: 4px; }
-  .hdr-right .btn:not(.btn-g):not([onclick*="openAdd"]) { display: none; }
-  .store-badge { display: none; }
-
-  /* Mobile top bar — show sync + menu */
   .mob-topbar { display: flex !important; align-items:center; gap:8px; padding:6px 12px;
-    background:#262a3d; border-bottom:1px solid #2e3350; }
+    background:#8B1A1A; border-bottom:1px solid #a52525; }
   .mob-sync { font-size:9px; color:#9099c0; }
-
-  /* Dept tabs — scrollable */
-  .dept-bar { padding: 0 8px; }
-  .dept-tab { padding: 8px 12px; font-size: 11px; }
-  .dept-edit-btn, .dept-del-btn { display: none !important; }
-
-  /* Main area */
-  .layout { height: auto; flex-direction: column; }
   .main { padding: 10px 12px; }
   .logp { display: none !important; }
-
-  /* Hide complex table — show mobile card view instead */
   .desktop-table { display: none !important; }
   .mobile-cards { display: flex !important; flex-direction: column; gap: 8px; }
-
-  /* Action buttons — 2 per row on mobile */
   .abar { gap: 6px; }
-  .abtn { flex: 1; min-width: calc(50% - 6px); padding: 10px 8px;
-    font-size: 11px; text-align: center; }
-
-  /* Sort bar — scrollable */
+  .abtn { flex: 1; min-width: calc(50% - 6px); padding: 10px 8px; font-size: 11px; text-align: center; }
   .sort-bar { overflow-x: auto; flex-wrap: nowrap; padding-bottom: 4px; }
   .sort-btn { white-space: nowrap; padding: 5px 12px; font-size: 10px; }
-
-  /* Modals — full screen on mobile */
   .modal { width: 100% !important; max-width: 100% !important;
     margin: 0 !important; border-radius: 16px 16px 0 0 !important;
     max-height: 90vh; overflow-y: auto; }
   .ov { align-items: flex-end !important; }
-
-  /* Bottom nav */
   .mob-nav { display: flex !important; }
-
-  /* Hide desktop-only elements */
   .vtabs { display: none; }
   .sched-box { font-size: 11px; }
   .period-box { flex-direction: column; gap: 8px; }
-
-  /* Order guide — scrollable table */
   .twrap { overflow-x: auto; }
   th, td { font-size: 10px; padding: 6px 8px; }
-
-  /* Quick BOH button */
   .boh-btn { display: flex !important; }
 }
 
@@ -338,7 +357,7 @@ td{padding:8px 11px;font-size:11px;vertical-align:middle}
   padding: 12px 14px; position: relative;
 }
 .mob-card-name { font-size: 13px; font-weight: 600; color: #dde0e8; margin-bottom: 6px; }
-.mob-card-upc { font-size: 9px; color: #3a4060; margin-bottom: 8px; }
+.mob-card-upc { font-size: 9px; color: #7a82a8; margin-bottom: 8px; }
 .mob-card-stats { display: flex; gap: 10px; flex-wrap: wrap; }
 .mob-stat { display: flex; flex-direction: column; align-items: center;
   background: #181c2a; border-radius: 5px; padding: 5px 10px; min-width: 55px; }
@@ -576,40 +595,80 @@ td{padding:8px 11px;font-size:11px;vertical-align:middle}
 
 <div class="alerts" id="alerts"></div>
 
-<!-- TOP HEADER -->
-<div class="top-hdr">
-  <div>
-    <div class="logo">STOCK<em style="color:var(--dc,#00e676)">CTRL</em></div>
-    <div class="logo-sub" id="appSubtitle" onclick="editSubtitle()" title="Click to edit" style="cursor:pointer;border-bottom:1px dashed #4a5070"></div>
-  </div>
-  <div class="hdr-center">
-    <div class="sync-wrap" id="syncWrap">
-      <div class="sync-dot none" id="syncDot"></div>
-      <span class="sync-txt" id="syncTxt">NOT CONNECTED</span>
-      <span class="sync-time" id="syncTime"></span>
+<!-- SIDEBAR + MAIN LAYOUT -->
+<div class="app-wrap">
+  <!-- SIDEBAR -->
+  <div class="sidebar" id="sidebarPanel">
+    <div class="sb-logo">
+      <div class="logo">STOCK<em style="color:#FFD700">CTRL</em></div>
+      <div class="logo-sub" id="appSubtitle" onclick="editSubtitle()" title="Click to edit" style="cursor:pointer;border-bottom:1px dashed #4a1818"></div>
     </div>
-    <button class="sync-btn" id="syncBtn" onclick="manualSync()" title="Force sync now">↻ SYNC NOW</button>
-    <button class="btn btn-gh btn-xs" onclick="openSetup()" title="Google Drive settings">☁ DRIVE</button>
-    <button class="btn btn-gh btn-xs" onclick="openSettings()" title="App settings">⚙️ SETTINGS</button>
+    <div class="sb-sync">
+      <div class="sync-wrap" id="syncWrap">
+        <div class="sync-dot none" id="syncDot"></div>
+        <span class="sync-txt" id="syncTxt">NOT CONNECTED</span>
+        <span class="sync-time" id="syncTime"></span>
+      </div>
+      <button class="sync-btn" id="syncBtn" onclick="manualSync()" title="Force sync now">↻ SYNC</button>
+    </div>
+    <div class="sb-label">DEPARTMENTS</div>
+    <div class="sb-depts" id="deptBar"></div>
+    <div class="sb-divider"></div>
+    <div class="sb-label">ACTIONS</div>
+    <div class="sb-actions">
+      <button class="sb-act sb-act-grn" onclick="openTx('delivery')">📦 Log Delivery</button>
+      <button class="sb-act sb-act-org" onclick="openTx('throwaway')">🗑️ Log Throwaway</button>
+      <button class="sb-act sb-act-blu" onclick="openTx('sale')">💰 Log Sales</button>
+      <button class="sb-act" onclick="openBOHModal()">📦 BOH Update</button>
+      <button class="sb-act" onclick="toggleLog()">📋 Log History</button>
+    </div>
+    <div class="sb-divider"></div>
+    <div class="sb-actions">
+      <button class="sb-act" onclick="openSetup()">☁ Drive Sync</button>
+      <button class="sb-act" onclick="openSettings()">⚙️ Settings</button>
+      <button class="sb-act" onclick="exportData()">⬇ Export</button>
+      <button class="sb-act" onclick="document.getElementById('importIn').click()">⬆ Import</button>
+      <input type="file" id="importIn" accept=".json" style="display:none" onchange="importData(this)"/>
+    </div>
   </div>
-  <div class="hdr-right">
-    <button class="btn btn-gh btn-xs" onclick="exportData()" title="Export backup">⬇ EXPORT</button>
-    <button class="btn btn-gh btn-xs" onclick="document.getElementById('importIn').click()" title="Import backup">⬆ IMPORT</button>
-    <input type="file" id="importIn" accept=".json" style="display:none" onchange="importData(this)"/>
-    
-    <div class="store-badge" id="deptBadge">FRESH MEAT</div>
-    <button class="btn btn-gh btn-xs" onclick="toggleLog()">📋 LOG</button>
-    <button class="btn btn-gh btn-xs" onclick="openBOHModal()" title="Update BOH by search or scan">📦 BOH UPDATE</button>
-    <button class="btn btn-g btn-xs" onclick="openAdd()">+ ADD PRODUCT</button>
-  </div>
-</div>
 
-<!-- MULTI BAR -->
-<div class="multi-bar" id="multiBar">
-  <span class="multi-cnt" id="multiCnt">0 selected</span>
-  <button class="multi-cancel" onclick="clearSel()">✕ CANCEL</button>
-  <button class="multi-del" style="background:#00e67615;border-color:#00e67640;color:#00e676" onclick="openMoveModal()">📦 MOVE TO...</button>
-  <button class="multi-del" onclick="delSelected()">🗑️ DELETE</button>
+  <!-- MAIN CONTENT -->
+  <div class="main-wrap">
+    <!-- TOP BAR -->
+    <div class="content-topbar">
+      <div class="ct-left">
+        <span class="ct-dept" id="deptBadge">FRESH MEAT</span>
+        <span class="ct-count" id="deptItemCount"></span>
+      </div>
+      <div class="ct-center" id="delBar"></div>
+      <div class="ct-right">
+        <button class="btn btn-g btn-xs" onclick="openAdd()" style="background:#FFD700;color:#4a1b0c;font-weight:700">+ ADD PRODUCT</button>
+      </div>
+    </div>
+
+    <!-- MULTI BAR -->
+    <div class="multi-bar" id="multiBar">
+      <span class="multi-cnt" id="multiCnt">0 selected</span>
+      <button class="multi-cancel" onclick="clearSel()">✕ CANCEL</button>
+      <button class="multi-del" style="background:#00e67615;border-color:#00e67640;color:#00e676" onclick="openMoveModal()">📦 MOVE TO...</button>
+      <button class="multi-del" onclick="delSelected()">🗑️ DELETE</button>
+    </div>
+
+    <!-- SPLIT VIEW: INVENTORY + ORDER GUIDE -->
+    <div class="split-view">
+      <div class="split-inv" id="mainArea"></div>
+      <div class="split-ord" id="orderArea"></div>
+    </div>
+
+    <!-- LOG PANEL -->
+    <div class="logp" id="logP">
+      <div class="logh">
+        <div class="logt" id="logTitle">LOG</div>
+        <button class="btn btn-gh btn-xs" onclick="toggleLog()">✕</button>
+      </div>
+      <div id="logBody"><div class="log-empty">No transactions yet.</div></div>
+    </div>
+  </div>
 </div>
 
 <!-- MOVE MODAL -->
@@ -625,24 +684,6 @@ td{padding:8px 11px;font-size:11px;vertical-align:middle}
       <button onclick="closeMoveModal()" style="padding:10px 14px;border-radius:6px;border:1px solid #2e3350;background:transparent;color:#6068a0;font-family:'DM Mono',monospace;font-size:12px;cursor:pointer">CANCEL</button>
       <button onclick="confirmMove()" style="flex:1;padding:10px;border-radius:6px;border:1px solid #00e67640;background:#00e67615;color:#00e676;font-family:'DM Mono',monospace;font-size:12px;font-weight:700;cursor:pointer">✓ MOVE ITEMS</button>
     </div>
-  </div>
-</div>
-
-<!-- DEPT TABS -->
-<div class="dept-bar" id="deptBar"></div>
-
-<!-- DELIVERY BANNER -->
-<div class="del-bar" id="delBar"></div>
-
-<!-- MAIN LAYOUT -->
-<div class="layout">
-  <div class="main" id="mainArea"></div>
-  <div class="logp" id="logP">
-    <div class="logh">
-      <div class="logt" id="logTitle">LOG</div>
-      <button class="btn btn-gh btn-xs" onclick="toggleLog()">✕</button>
-    </div>
-    <div id="logBody"><div class="log-empty">No transactions yet.</div></div>
   </div>
 </div>
 
@@ -1084,7 +1125,7 @@ let curTx=null, pdfRows=[], repInfo={}, editingProductId=null, editingDeptId=nul
 // ══ HELPERS ═══════════════════════════════════════════════════════════════════
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function uid(){return Date.now()+Math.floor(Math.random()*9999);}
-function getDept(){return depts.find(d=>d.id===activeDeptId)||depts[0];}
+function getDept(){return depts.find(d=>String(d.id)===String(activeDeptId))||depts[0];}
 function getItems(){return getDept().items;}
 function dc(){return getDept().color;}
 
@@ -1259,18 +1300,31 @@ function getAvg(item){
 
   // Separate weekly entries from quarterly entries
   const weekly=item.salesHistory.filter(e=>e.type==='weekly');
-  const quarterly=item.salesHistory.filter(e=>e.type!=='weekly');
+  const quarterly=item.salesHistory.filter(e=>e.type!=='weekly'&&e.type!=null);
 
-  if(weekly.length>=1){
-    // Use rolling average of last 13 weekly entries
+  // If we have 4+ weeks of weekly data, it's fresh enough to use as rolling avg
+  if(weekly.length>=4){
     const last13=weekly.slice(-13);
     const avg=last13.reduce((s,e)=>s+e.qty,0)/last13.length;
     return avg;
   }
 
-  // Fall back to quarterly average
+  // Quarterly data covers 12+ weeks — prefer it over limited weekly data
   if(quarterly.length){
-    return quarterly.reduce((s,e)=>s+(e.qty/(e.periodWeeks||1)),0)/quarterly.length;
+    const latest=quarterly[quarterly.length-1];
+    return latest.qty/(latest.periodWeeks||13);
+  }
+
+  // Fallback: use whatever weekly data we have (1-3 weeks)
+  if(weekly.length>=1){
+    const avg=weekly.reduce((s,e)=>s+e.qty,0)/weekly.length;
+    return avg;
+  }
+
+  // Legacy entries without type field
+  const legacy=item.salesHistory.filter(e=>!e.type);
+  if(legacy.length){
+    return legacy.reduce((s,e)=>s+(e.qty/(e.periodWeeks||1)),0)/legacy.length;
   }
   return null;
 }
@@ -1305,13 +1359,27 @@ function avgSrcLabel(item){
   if(!item.salesHistory||!item.salesHistory.length) return`<div class="avg-src src-none">no data</div>`;
 
   const weekly=item.salesHistory.filter(e=>e.type==='weekly');
+  const quarterly=item.salesHistory.filter(e=>e.type==='quarterly');
   const trend=getTrend(item);
   const trendIcon=trend==='up'?'📈':trend==='down'?'📉':trend==='stable'?'➡️':'';
   const trendColor=trend==='up'?'#00e676':trend==='down'?'#ff6b35':'#888';
 
-  if(weekly.length>=1){
+  // If 4+ weeks of weekly data, show rolling avg label
+  if(weekly.length>=4){
     const wks=Math.min(weekly.length,13);
     return`<div class="avg-src src-auto">rolling ${wks}wk avg ${trendIcon?`<span style="color:${trendColor}">${trendIcon}</span>`:''}</div>`;
+  }
+
+  // Quarterly takes priority over 1-3 weeks of data
+  if(quarterly.length){
+    const last=quarterly[quarterly.length-1];
+    const pw=last.periodWeeks||13;
+    return`<div class="avg-src src-auto" style="color:#ff6b35">${pw}wk quarter avg</div>`;
+  }
+
+  // Show limited weekly data label
+  if(weekly.length>=1){
+    return`<div class="avg-src src-auto">${weekly.length}wk avg <span style="color:#ffab00;font-size:7px">⚠ limited</span></div>`;
   }
 
   const last=item.salesHistory[item.salesHistory.length-1];
@@ -1383,18 +1451,28 @@ function renderBanner(){
 function renderDeptTabs(){
   const bar=document.getElementById('deptBar');
   bar.innerHTML=depts.map(d=>{
-    const isActive=d.id===activeDeptId;
+    const isActive=String(d.id)===String(activeDeptId);
     const low=d.items.filter(i=>getStatus(i,d)!=='OK').length;
     const neg=d.items.filter(i=>i.total<0).length;
-    return`<div class="dept-tab ${isActive?'active':''}" style="--dc:${d.color}" onclick="switchDept('${d.id}')">
-      <span class="dept-dot"></span>
+    return`<div class="sb-dept ${isActive?'active':''}" style="--dc:${d.color}" onclick="switchDept('${d.id}')">
       <span>${esc(d.name)}</span>
-      <span class="dept-count">${d.items.length}</span>
-      ${neg?`<span style="font-size:7px;color:#ff6600;margin-left:2px" title="${neg} item(s) have negative BOH — check deliveries">⚠️${neg}</span>`:low?`<span style="font-size:7px;color:#ff6b6b;margin-left:2px">⚠${low}</span>`:''}
-      <button class="dept-edit-btn" onclick="event.stopPropagation();openEditDept('${d.id}')" title="Rename / recolor">✎</button>
-      ${depts.length>1?`<button class="dept-del-btn" onclick="event.stopPropagation();deleteDept('${d.id}')" title="Delete">✕</button>`:''}
+      <span>
+        <span class="sb-dept-count">${d.items.length}</span>
+        ${neg?`<span class="sb-dept-alerts" title="${neg} negative BOH">⚠️${neg}</span>`:low?`<span class="sb-dept-alerts">⚠${low}</span>`:''}
+        <button class="sb-dept-edit" onclick="event.stopPropagation();openEditDept('${d.id}')" title="Edit">✎</button>
+        ${depts.length>1?`<button class="sb-dept-edit" onclick="event.stopPropagation();deleteDept('${d.id}')" title="Delete">✕</button>`:''}
+      </span>
     </div>`;
-  }).join('')+`<button class="dept-add-btn" onclick="openDeptMod()" title="Add Department">＋</button>`;
+  }).join('')+`<div class="sb-dept" onclick="openDeptMod()" style="color:#555;font-size:10px">＋ Add Department</div>`;
+  // Update top bar dept name
+  const dept=getDept();
+  const badge=document.getElementById('deptBadge');
+  if(badge)badge.textContent=dept.name.toUpperCase();
+  const cnt=document.getElementById('deptItemCount');
+  if(cnt){
+    const low=dept.items.filter(i=>getStatus(i,dept)!=='OK').length;
+    cnt.innerHTML=`${dept.items.length} items${low?` · <span style="color:#ffab00">${low} alerts</span>`:''}`;
+  }
 }
 
 function applyColor(c){document.documentElement.style.setProperty('--dc',c);}
@@ -1405,6 +1483,11 @@ function switchDept(id){
   applyColor(dept.color);
   document.getElementById('deptBadge').textContent=dept.name.toUpperCase();
   document.getElementById('logTitle').textContent=dept.name.toUpperCase()+' LOG';
+  const cnt=document.getElementById('deptItemCount');
+  if(cnt){
+    const low=dept.items.filter(i=>getStatus(i,dept)!=='OK').length;
+    cnt.innerHTML=`${dept.items.length} items${low?` · <span style="color:#ffab00">${low} alerts</span>`:''}`;
+  }
   renderDeptTabs();
   renderBanner();
   renderMain();
@@ -1413,21 +1496,19 @@ function switchDept(id){
 // ══ MAIN RENDER ═══════════════════════════════════════════════════════════════
 function renderMain(){
   const dept=getDept();
-  const v=dept.view||'inventory';
-  document.getElementById('mainArea').innerHTML=`
-    <div class="vtabs" style="--dc:${dept.color}">
-      <button class="vtab ${v==='inventory'?'on':''}" onclick="setView('inventory')">📦 INVENTORY</button>
-      <button class="vtab ${v==='order'?'on':''}" onclick="setView('order')">🛒 ORDER GUIDE</button>
-    </div>
-    <div id="vInv" style="display:${v==='inventory'?'block':'none'}">${invHTML(dept)}</div>
-    <div id="vOrd" style="display:${v==='order'?'block':'none'}">${orderHTML(dept)}</div>`;
+  // Split view: inventory in left panel, order guide in right panel
+  document.getElementById('mainArea').innerHTML=invHTML(dept);
+  const ordArea=document.getElementById('orderArea');
+  if(ordArea) ordArea.innerHTML=orderHTML(dept);
 }
 
 function setView(v){
   const dept=getDept(); dept.view=v;
-  document.getElementById('vInv').style.display=v==='inventory'?'block':'none';
-  document.getElementById('vOrd').style.display=v==='order'?'block':'none';
-  document.querySelectorAll('.vtab').forEach(t=>t.classList.toggle('on',t.textContent.toLowerCase().includes(v==='inventory'?'inventory':'order')));
+  // In split view, both are always visible — but we can scroll to the panel
+  if(v==='order'){
+    const ordArea=document.getElementById('orderArea');
+    if(ordArea) ordArea.scrollTop=0;
+  }
   scheduleDriveSync();
 }
 
@@ -1435,7 +1516,7 @@ function setView(v){
 function invHTML(dept){
   const col=dept.color;
   const useMin=dept.useMinimums||false;
-  const colspan=useMin?10:8;
+  const colspan=useMin?14:11;
   dept.items.forEach(function(item){extractPackSize(item);});
   if(dept.sections&&dept.sections.length)autoAssign(dept);
   const mkRow=(item,i)=>{
@@ -1450,17 +1531,20 @@ function invHTML(dept){
         onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur()}"
         style="${style}">${v}</span><span class="eh">✏</span>`;
       const isDrag=(dept.sortBy||'custom')==='custom';
-      return`<tr class="${isDrag?'drag-row':''}" draggable="${isDrag?'true':'false'}" data-iid="${iid}" data-did="${did}" ${isDrag?`ondragstart="dragStart(event,'${did}',${iid})" ondragover="dragOver(event)" ondrop="dragDrop(event,'${did}')" ondragend="dragEnd(event)"`:''}>
-        <td style="color:#1e2330;font-size:8px">${isDrag?'<span style="cursor:grab;color:#3a4060;font-size:14px">⠿</span>':i+1}</td>
+      return`<tr id="irow_${did}_${iid}" class="${isDrag?'drag-row':''}" draggable="${isDrag?'true':'false'}" data-iid="${iid}" data-did="${did}" ${isDrag?`ondragstart="dragStart(event,'${did}',${iid})" ondragover="dragOver(event)" ondrop="dragDrop(event,'${did}')" ondragend="dragEnd(event)"`:''}>
+        <td style="width:20px;padding:0 4px"><input type="checkbox" class="cb-sel" id="cb_${did}_${iid}" onchange="onCB('${did}',${iid},this.checked)"/></td>
+        <td style="color:#6068a0;font-size:8px">${isDrag?'<span style="cursor:grab;color:#3a4060;font-size:14px">⠿</span>':i+1}</td>
         <td>
           <div style="font-size:12px;font-weight:500;color:#dde0e8">${esc(item.name)}</div>
-          <div style="font-size:8px;color:#22273a">${item.upc||''}</div>
+          <div style="font-size:9px;color:#7a82a8">${item.upc||''}</div>
           ${item.subCategory?`<span class="subcat-tag" style="background:${item.subCategory==='Chicken'?'#40c4ff12':'#ff6b3512'};border:1px solid ${item.subCategory==='Chicken'?'#40c4ff30':'#ff6b3530'};color:${item.subCategory==='Chicken'?'#40c4ff':'#ff6b35'}">${item.subCategory==='Meat'?'🥩':item.subCategory==='Chicken'?'🍗':item.subCategory==='Pork'?'🐷':'🐟'} ${esc(item.subCategory)}</span>`:''}
           ${item.isWeightItem?`<span class="weight-tag">⚖️ ${item.avgPackageWeight?item.avgPackageWeight+' lbs/pkg':'set pkg weight'}</span>`:''}
           ${item.unitsPerCase?`<div style="font-size:7px;color:#6068a0;margin-top:1px">${item.unitsPerCase} pkgs/case</div>`:''}
         </td>
         ${useMin?`<td class="td-num">${E('shelfMin',item.shelfMin)}</td><td class="td-num">${E('backstockMin',item.backstockMin)}</td>`:''}
-        <td class="td-pack">${(()=>{var m=item.name.match(/(\d+\.\d+)\/(\d+\.\d+)\s*(LB|OZ|GLL|GL|PT|QT|EA)/i);if(m)return m[1]+'/'+m[2]+' '+m[3].toUpperCase();if(item.isWeightItem&&item.avgPackageWeight)return item.avgPackageWeight+' LB';if(item.unitsPerCase)return item.unitsPerCase+'/case';return '—';})()}</td>\n        <td class="td-num">${E('deliveryTotal','+'+dT,'color:#00e676')}</td>
+        <td class="td-pack">${(()=>{var m=item.name.match(/(\d+\.\d+)\/(\d+\.\d+)\s*(LB|OZ|GLL|GL|PT|QT|EA)/i);if(m)return m[1]+'/'+m[2]+' '+m[3].toUpperCase();if(item.isWeightItem&&item.avgPackageWeight)return item.avgPackageWeight+' LB';if(item.unitsPerCase)return item.unitsPerCase+'/case';return '—';})()}</td>
+        <td class="td-num" style="color:#a78bfa;font-size:11px">${item.casesReceived?item.casesReceived:'—'}</td>
+        <td class="td-num">${E('deliveryTotal','+'+dT,'color:#00e676')}</td>
         <td class="td-num">${E('throwawayTotal','−'+tT,'color:#ff6b35')}</td>
         <td class="td-num">${E('soldTotal','−'+sT,'color:#40c4ff')}</td>
         <td class="td-num">${(()=>{
@@ -1505,8 +1589,18 @@ function invHTML(dept){
     <button class="abtn" style="background:#ff6b3512;border-color:#ff6b3535;color:#ff6b35" onclick="openTx('throwaway')">🗑️ LOG THROWAWAY</button>
     <button class="abtn" style="background:#40c4ff12;border-color:#40c4ff35;color:#40c4ff" onclick="openTx('sale')">💰 LOG SALES</button>
     <button class="abtn" style="background:#22273a;border-color:#2e3350;color:#9099c0" onclick="addSection('${dept.id}')">＋ ADD SECTION</button>
-    <button class="abtn" style="background:#ff334415;border-color:#ff334435;color:#ff6b6b" onclick="confirmResetSold('${dept.id}')" title="Reset SOLD totals to zero">🔄 RESET SOLD</button>
-    <button class="abtn" style="background:#ff6b3515;border-color:#ff6b3535;color:#ff6b35" onclick="confirmResetDeliveries('${dept.id}')" title="Reset deliveries and ON HAND to zero">🔄 RESET BOH</button>
+    <div style="position:relative;display:inline-block">
+      <button class="abtn" style="background:#ff334410;border-color:#ff334430;color:#ff6b6b" onclick="toggleResetMenu('${dept.id}')">🔄 RESET ▾</button>
+      <div id="resetMenu_${dept.id}" style="display:none;position:absolute;top:100%;right:0;z-index:999;min-width:200px;background:#0c0e18;border:1px solid #2e3350;border-radius:8px;padding:4px;margin-top:4px;box-shadow:0 8px 24px rgba(0,0,0,.5)">
+        <div style="padding:4px 10px;font-size:7px;color:#444;letter-spacing:.12em">RESET OPTIONS</div>
+        <button class="reset-opt" onclick="confirmResetDeliveryOnly('${dept.id}')" style="display:block;width:100%;text-align:left;padding:8px 10px;background:none;border:none;color:#00e676;font-size:10px;cursor:pointer;border-radius:4px" onmouseover="this.style.background='#ffffff08'" onmouseout="this.style.background='none'">📦 Reset Deliveries<br/><span style="font-size:8px;color:#555">Undo deliveries from ON HAND, clear cases</span></button>
+        <button class="reset-opt" onclick="confirmResetThrowaway('${dept.id}')" style="display:block;width:100%;text-align:left;padding:8px 10px;background:none;border:none;color:#ff6b35;font-size:10px;cursor:pointer;border-radius:4px" onmouseover="this.style.background='#ffffff08'" onmouseout="this.style.background='none'">🗑️ Reset Throwaways<br/><span style="font-size:8px;color:#555">Add back throwaway to ON HAND</span></button>
+        <button class="reset-opt" onclick="confirmResetSold('${dept.id}')" style="display:block;width:100%;text-align:left;padding:8px 10px;background:none;border:none;color:#40c4ff;font-size:10px;cursor:pointer;border-radius:4px" onmouseover="this.style.background='#ffffff08'" onmouseout="this.style.background='none'">💰 Reset Sales<br/><span style="font-size:8px;color:#555">Add back sold qty to ON HAND</span></button>
+        <div style="border-top:1px solid #1a1d2e;margin:4px 0"></div>
+        <button class="reset-opt" onclick="confirmResetBOH('${dept.id}')" style="display:block;width:100%;text-align:left;padding:8px 10px;background:none;border:none;color:#ff6b35;font-size:10px;cursor:pointer;border-radius:4px" onmouseover="this.style.background='#ffffff08'" onmouseout="this.style.background='none'">📦 Reset BOH Only<br/><span style="font-size:8px;color:#555">ON HAND & deliveries → 0, keep sold/throwaway</span></button>
+        <button class="reset-opt" onclick="confirmResetAll('${dept.id}')" style="display:block;width:100%;text-align:left;padding:8px 10px;background:none;border:none;color:#ff3344;font-size:10px;cursor:pointer;border-radius:4px;font-weight:600" onmouseover="this.style.background='#ff334410'" onmouseout="this.style.background='none'">⚠️ Reset ALL<br/><span style="font-size:8px;color:#555;font-weight:400">Everything to 0 — delivery, sold, throwaway, ON HAND</span></button>
+      </div>
+    </div>
     <div style="margin-left:auto;font-size:8px;color:#1e2330">✏️ click any number to edit inline</div>
   </div>
   <div class="inv-search-bar">
@@ -1529,7 +1623,7 @@ function invHTML(dept){
     <thead><tr>
       <th style="width:20px;padding:0 4px"><input type="checkbox" class="cb-sel" id="saAll_${dept.id}" onchange="selAll('${dept.id}',this.checked)" title="Select all"/></th><th>${(dept.sortBy||'custom')==='custom'?'☰':'#'}</th><th>PRODUCT</th>
       ${useMin?'<th class="td-num">SHELF MIN ✏</th><th class="td-num">BACK MIN ✏</th>':''}
-      <th class="td-pack">PACK/SIZE</th><th class="td-num">DELIVERIES ✏</th><th class="td-num">THROWAWAY ✏</th><th class="td-num">SOLD ✏</th>
+      <th class="td-pack">PACK/SIZE</th><th class="td-num">CASES IN</th><th class="td-num">DELIVERIES ✏</th><th class="td-num">THROWAWAY ✏</th><th class="td-num">SOLD ✏</th>
       <th class="td-num hl">ON HAND ✏</th>
       ${useMin?'<th class="td-num hl">BACK NEED</th>':''}
       <th>STATUS</th><th></th>
@@ -1661,7 +1755,7 @@ function orderHTML(dept){
         return`<td class="td-num">${qH(orderQtyForDelivery(item,delivDay,dept),item)}</td>`;
       }).join('');
       return`<tr>
-        <td><div style="font-size:11px;font-weight:500;color:#dde0e8">${esc(item.name)} ${trendBadge}</div><div style="font-size:8px;color:#1a1e2a">${item.upc||''} ${wkCount>0?`<span style="color:#40c4ff;font-size:8px">${wkCount} wk${wkCount>1?'s':''} tracked</span>`:''}</div></td>
+        <td><div style="font-size:11px;font-weight:500;color:#dde0e8">${esc(item.name)} ${trendBadge}</div><div style="font-size:8px;color:#7a82a8">${item.upc||''} ${wkCount>0?`<span style="color:#40c4ff;font-size:8px">${wkCount} wk${wkCount>1?'s':''} tracked</span>`:''}</div></td>
         <td style="white-space:nowrap">
           <input class="avg-inp" type="number" min="0" step="1"
             value="${src==='man'?Math.round(item.manualWeeklyAvg):''}"
@@ -1742,7 +1836,7 @@ function orderHTML(dept){
 
 // ══ PRINT ORDER GUIDE ════════════════════════════════════════════════════════
 function printOrderGuide(deptId){
-  const dept=depts.find(d=>d.id===deptId);if(!dept)return;
+  const dept=depts.find(d=>String(d.id)===String(deptId));if(!dept)return;
   const sched=dept.schedule||[];
   const now=new Date();
   const dateStr=now.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
@@ -1794,7 +1888,7 @@ function printOrderGuide(deptId){
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="apple-mobile-web-app-title" content="STOCKCTRL"/>
-<meta name="theme-color" content="#1a1d2e"/>
+<meta name="theme-color" content="#8B1A1A"/>
 <link rel="manifest" href="data:application/json,{
   %22name%22:%22STOCKCTRL%22,
   %22short_name%22:%22STOCKCTRL%22,
@@ -1839,7 +1933,7 @@ function printOrderGuide(deptId){
 
   /* Mobile top bar — show sync + menu */
   .mob-topbar { display: flex !important; align-items:center; gap:8px; padding:6px 12px;
-    background:#262a3d; border-bottom:1px solid #2e3350; }
+    background:#8B1A1A; border-bottom:1px solid #a52525; }
   .mob-sync { font-size:9px; color:#9099c0; }
 
   /* Dept tabs — scrollable */
@@ -1918,7 +2012,7 @@ function printOrderGuide(deptId){
   padding: 12px 14px; position: relative;
 }
 .mob-card-name { font-size: 13px; font-weight: 600; color: #dde0e8; margin-bottom: 6px; }
-.mob-card-upc { font-size: 9px; color: #3a4060; margin-bottom: 8px; }
+.mob-card-upc { font-size: 9px; color: #7a82a8; margin-bottom: 8px; }
 .mob-card-stats { display: flex; gap: 10px; flex-wrap: wrap; }
 .mob-stat { display: flex; flex-direction: column; align-items: center;
   background: #181c2a; border-radius: 5px; padding: 5px 10px; min-width: 55px; }
@@ -2031,20 +2125,20 @@ function printOrderGuide(deptId){
 
 // ══ SCHEDULE MANAGEMENT ═══════════════════════════════════════════════════════
 function addSlot(deptId){
-  const dept=depts.find(d=>d.id===deptId);if(!dept)return;
+  const dept=depts.find(d=>String(d.id)===String(deptId));if(!dept)return;
   if(!dept.schedule)dept.schedule=[];
   dept.schedule.push({id:'s'+uid(),orderDay:2,orderTime:'10:00 AM',subCats:[{name:'Meat',deliveryDay:5},{name:'Chicken',deliveryDay:1}]});
   dept.view='order'; // stay on order guide
   scheduleDriveSync();renderMain();renderBanner();
 }
 function removeSlot(deptId,slotId){
-  const dept=depts.find(d=>d.id===deptId);if(!dept)return;
+  const dept=depts.find(d=>String(d.id)===String(deptId));if(!dept)return;
   dept.schedule=(dept.schedule||[]).filter(s=>s.id!==slotId);
   dept.view='order';
   scheduleDriveSync();renderMain();renderBanner();
 }
 function updateSlot(deptId,slotId,field,value){
-  const dept=depts.find(d=>d.id===deptId);if(!dept)return;
+  const dept=depts.find(d=>String(d.id)===String(deptId));if(!dept)return;
   const slot=(dept.schedule||[]).find(s=>s.id===slotId);if(!slot)return;
   slot[field]=parseInt(value);
   dept.view='order';
@@ -2053,7 +2147,7 @@ function updateSlot(deptId,slotId,field,value){
 
 
 function updateSlotTime(deptId,slotId,value){
-  const dept=depts.find(d=>d.id===deptId);if(!dept)return;
+  const dept=depts.find(d=>String(d.id)===String(deptId));if(!dept)return;
   const slot=(dept.schedule||[]).find(s=>s.id===slotId);if(!slot)return;
   slot.orderTime=value.trim();
   dept.view='order';
@@ -2061,7 +2155,7 @@ function updateSlotTime(deptId,slotId,value){
 }
 
 function addSubCat(deptId,slotId){
-  const dept=depts.find(d=>d.id===deptId);if(!dept)return;
+  const dept=depts.find(d=>String(d.id)===String(deptId));if(!dept)return;
   const slot=(dept.schedule||[]).find(s=>s.id===slotId);if(!slot)return;
   if(!slot.subCats)slot.subCats=[];
   const names=['Meat','Chicken','Pork','Seafood','Deli','Other'];
@@ -2073,7 +2167,7 @@ function addSubCat(deptId,slotId){
 }
 
 function removeSubCat(deptId,slotId,idx){
-  const dept=depts.find(d=>d.id===deptId);if(!dept)return;
+  const dept=depts.find(d=>String(d.id)===String(deptId));if(!dept)return;
   const slot=(dept.schedule||[]).find(s=>s.id===slotId);if(!slot||!slot.subCats)return;
   slot.subCats.splice(idx,1);
   dept.view='order';
@@ -2081,7 +2175,7 @@ function removeSubCat(deptId,slotId,idx){
 }
 
 function updateSubCat(deptId,slotId,idx,field,value){
-  const dept=depts.find(d=>d.id===deptId);if(!dept)return;
+  const dept=depts.find(d=>String(d.id)===String(deptId));if(!dept)return;
   const slot=(dept.schedule||[]).find(s=>s.id===slotId);if(!slot||!slot.subCats)return;
   const sc=slot.subCats[idx];if(!sc)return;
   if(field==='deliveryDay') sc.deliveryDay=parseInt(value);
@@ -2160,7 +2254,7 @@ function secDragEnd(e){e.target.style.opacity='';}
 function secDrop(e,did,sid){
   e.preventDefault();e.stopPropagation();
   if(!_siid||_sdid!==did)return;
-  var dept=depts.find(function(d){return d.id===did;});if(!dept)return;
+  var dept=depts.find(function(d){return String(d.id)===String(did);});if(!dept)return;
   (dept.sections||[]).forEach(function(s){if(s.itemIds)s.itemIds=s.itemIds.filter(function(x){return x!==_siid;});});
   var sec=(dept.sections||[]).find(function(s){return s.id===sid;});
   if(sec){if(!sec.itemIds)sec.itemIds=[];if(!sec.itemIds.includes(_siid))sec.itemIds.push(_siid);}
@@ -2171,13 +2265,13 @@ function toggleSec(k){
   localStorage.setItem('sec_'+k,v?'0':'1');renderMain();
 }
 function renameSec(did,sid){
-  var dept=depts.find(function(d){return d.id===did;});if(!dept)return;
+  var dept=depts.find(function(d){return String(d.id)===String(did);});if(!dept)return;
   var sec=(dept.sections||[]).find(function(s){return s.id===sid;});if(!sec)return;
   var nm=prompt('Rename section:',sec.name);
   if(nm&&nm.trim()){sec.name=nm.trim();saveLocal();scheduleDriveSync();renderMain();}
 }
 function addSection(did){
-  var dept=depts.find(function(d){return d.id===did;});if(!dept)return;
+  var dept=depts.find(function(d){return String(d.id)===String(did);});if(!dept)return;
   var nm=prompt('New section name:','📦 New Section');
   if(!nm||!nm.trim())return;
   if(!dept.sections)dept.sections=[];
@@ -2216,7 +2310,7 @@ function onCB(did,iid,checked){
   updSelBar();
 }
 function selAll(did,checked){
-  var dept=depts.find(function(d){return d.id===did;});if(!dept)return;
+  var dept=depts.find(function(d){return String(d.id)===String(did);});if(!dept)return;
   if(!_sel[did])_sel[did]=new Set();
   dept.items.forEach(function(item){
     checked?_sel[did].add(item.id):_sel[did].delete(item.id);
@@ -2236,7 +2330,7 @@ function updSelBar(){
 }
 function clearSel(){
   Object.keys(_sel).forEach(function(did){
-    var dept=depts.find(function(d){return d.id===did;});
+    var dept=depts.find(function(d){return String(d.id)===String(did);});
     if(dept)dept.items.forEach(function(item){
       var row=document.getElementById('irow_'+did+'_'+item.id);
       if(row)row.classList.remove('tr-sel');
@@ -2253,7 +2347,7 @@ function delSelected(){
   if(!total)return;
   if(!confirm('Delete '+total+' item'+(total!==1?'s':'')+' permanently?'))return;
   Object.keys(_sel).forEach(function(did){
-    var dept=depts.find(function(d){return d.id===did;});if(!dept)return;
+    var dept=depts.find(function(d){return String(d.id)===String(did);});if(!dept)return;
     var ids=_sel[did];
     dept.items=dept.items.filter(function(item){return!ids.has(item.id);});
     (dept.sections||[]).forEach(function(sec){
@@ -2268,7 +2362,7 @@ var _moveTarget=null;
 function openMoveModal(){
   var total=Object.values(_sel).reduce(function(s,set){return s+set.size;},0);
   if(!total)return;
-  var currentDept=depts.find(function(d){return d.id===activeDeptId;});if(!currentDept)return;
+  var currentDept=depts.find(function(d){return String(d.id)===String(activeDeptId);});if(!currentDept)return;
   document.getElementById('moveItemCount').textContent='Moving '+total+' item'+(total!==1?'s':'')+' from '+currentDept.name;
   var secList=document.getElementById('moveSectionList');
   secList.innerHTML='';
@@ -2299,7 +2393,7 @@ function openMoveModal(){
 function closeMoveModal(){document.getElementById('moveModal').style.display='none';_moveTarget=null;}
 function confirmMove(){
   if(!_moveTarget){alert('Please select a destination.');return;}
-  var currentDept=depts.find(function(d){return d.id===activeDeptId;});if(!currentDept)return;
+  var currentDept=depts.find(function(d){return String(d.id)===String(activeDeptId);});if(!currentDept)return;
   var selectedIds=_sel[activeDeptId]?Array.from(_sel[activeDeptId]):[];
   if(!selectedIds.length){closeMoveModal();return;}
   if(_moveTarget.type==='section'){
@@ -2309,7 +2403,7 @@ function confirmMove(){
     if(!targetSec.itemIds)targetSec.itemIds=[];
     selectedIds.forEach(function(id){if(!targetSec.itemIds.includes(id))targetSec.itemIds.push(id);});
   } else {
-    var targetDept=depts.find(function(d){return d.id===_moveTarget.deptId;});if(!targetDept)return;
+    var targetDept=depts.find(function(d){return String(d.id)===String(_moveTarget.deptId);});if(!targetDept)return;
     var itemsToMove=currentDept.items.filter(function(item){return selectedIds.includes(item.id);});
     currentDept.items=currentDept.items.filter(function(item){return!selectedIds.includes(item.id);});
     (currentDept.sections||[]).forEach(function(sec){if(sec.itemIds)sec.itemIds=sec.itemIds.filter(function(id){return!selectedIds.includes(id);});});
@@ -2320,11 +2414,59 @@ function confirmMove(){
 document.addEventListener('click',function(e){if(e.target===document.getElementById('moveModal'))closeMoveModal();});
 
 // ══ RESET BOH ═════════════════════════════════════════════════════════════════
-function confirmResetDeliveries(deptId){
-  if(!confirm('Reset ALL deliveries and ON HAND to 0 for this department?'))return;
-  var dept=depts.find(function(d){return d.id===deptId;});if(!dept)return;
-  dept.items.forEach(function(item){item.total=0;item.deliveryTotal=0;item.deliveryLbs=0;});
+function toggleResetMenu(deptId){
+  const menu=document.getElementById('resetMenu_'+deptId);
+  if(!menu)return;
+  const show=menu.style.display==='none';
+  // Close all reset menus first
+  document.querySelectorAll('[id^="resetMenu_"]').forEach(m=>m.style.display='none');
+  if(show) menu.style.display='block';
+}
+// Close reset menu on outside click
+document.addEventListener('click',function(e){
+  if(!e.target.closest('[id^="resetMenu_"]')&&!e.target.closest('.abtn'))
+    document.querySelectorAll('[id^="resetMenu_"]').forEach(m=>m.style.display='none');
+});
+
+function confirmResetDeliveryOnly(deptId){
+  const dept=depts.find(function(d){return String(d.id)===String(deptId);});if(!dept)return;
+  if(!confirm(`Reset DELIVERIES for ${dept.name}?\n\nThis will:\n• Subtract delivered amounts from ON HAND\n• Clear delivery totals and cases received\n• Sold & throwaway stay the same`))return;
+  dept.items.forEach(function(item){
+    item.total=(item.total||0)-(item.deliveryTotal||0);
+    item.deliveryTotal=0;item.deliveryLbs=0;item.casesReceived=0;
+  });
   saveLocal();scheduleDriveSync();renderDeptTabs();renderMain();
+  showToast('✓ Deliveries reset · ON HAND adjusted','#00e676');
+}
+
+function confirmResetThrowaway(deptId){
+  const dept=depts.find(function(d){return String(d.id)===String(deptId);});if(!dept)return;
+  if(!confirm(`Reset THROWAWAY for ${dept.name}?\n\nThis will:\n• Add back throwaway amounts to ON HAND\n• Clear throwaway totals\n• Deliveries & sold stay the same`))return;
+  dept.items.forEach(function(item){
+    item.total=(item.total||0)+(item.throwawayTotal||0);
+    item.throwawayTotal=0;
+  });
+  saveLocal();scheduleDriveSync();renderDeptTabs();renderMain();
+  showToast('✓ Throwaways reset · ON HAND adjusted','#ff6b35');
+}
+
+function confirmResetBOH(deptId){
+  var dept=depts.find(function(d){return String(d.id)===String(deptId);});if(!dept)return;
+  if(!confirm('Reset ON HAND & deliveries to 0 for '+dept.name+'?\n\nSold & throwaway stay the same.'))return;
+  dept.items.forEach(function(item){item.total=0;item.deliveryTotal=0;item.deliveryLbs=0;item.casesReceived=0;});
+  saveLocal();scheduleDriveSync();renderDeptTabs();renderMain();
+  showToast('✓ BOH & deliveries reset to 0','#ff6b35');
+}
+
+function confirmResetAll(deptId){
+  const dept=depts.find(function(d){return String(d.id)===String(deptId);});if(!dept)return;
+  if(!confirm(`⚠️ RESET ALL for ${dept.name}?\n\nThis will set EVERYTHING to 0:\n• ON HAND → 0\n• Deliveries → 0\n• Sold → 0\n• Throwaway → 0\n• Cases received → 0\n\nAverages and products are kept.\nThis cannot be undone!`))return;
+  dept.items.forEach(function(item){
+    item.total=0;item.deliveryTotal=0;item.deliveryLbs=0;item.casesReceived=0;
+    item.throwawayTotal=0;item.soldTotal=0;item.soldLbs=0;
+  });
+  saveLocal();scheduleDriveSync();renderDeptTabs();renderMain();
+  showToast('✓ ALL totals reset to 0 · averages kept','#ff3344');
 }
 
 // ══ DELIVERY PDF ══════════════════════════════════════════════════════════════
@@ -2367,7 +2509,7 @@ function setPeriod(deptId,w){
 }
 function updatePeriodWeeks(deptId,w){
   const wks=parseInt(w)||1;
-  const dept=depts.find(d=>d.id===deptId);if(!dept)return;
+  const dept=depts.find(d=>String(d.id)===String(deptId));if(!dept)return;
   dept.periodWeeks=wks;
   dept.view='order';
   // FIXED: always update ALL salesHistory entries — no conditional
@@ -2384,7 +2526,7 @@ function updatePeriodWeeks(deptId,w){
 
 // ══ INLINE FIELD EDIT ════════════════════════════════════════════════════════
 function saveField(deptId,itemId,field,el){
-  const dept=depts.find(d=>d.id===deptId);if(!dept)return;
+  const dept=depts.find(d=>String(d.id)===String(deptId));if(!dept)return;
   const item=dept.items.find(i=>i.id===itemId);if(!item)return;
   const raw=el.textContent.replace(/^[+\-−\s]+/,'').trim();
   const v=parseInt(raw);
@@ -2398,7 +2540,7 @@ function saveField(deptId,itemId,field,el){
   renderDeptTabs();renderMain();
 }
 function setAvg(deptId,itemId,v){
-  const dept=depts.find(d=>d.id===deptId);if(!dept)return;
+  const dept=depts.find(d=>String(d.id)===String(deptId));if(!dept)return;
   const item=dept.items.find(i=>i.id===itemId);if(!item)return;
   const n=parseFloat(v);
   item.manualWeeklyAvg=isNaN(n)||n<=0?null:n;
@@ -2420,7 +2562,7 @@ function openAdd(){
   document.getElementById('nName').focus();
 }
 function openEditProduct(deptId,itemId){
-  const dept=depts.find(d=>d.id===deptId),item=dept&&dept.items.find(i=>i.id===itemId);if(!item)return;
+  const dept=depts.find(d=>String(d.id)===String(deptId)),item=dept&&dept.items.find(i=>i.id===itemId);if(!item)return;
   editingProductId=itemId;
   document.getElementById('addModTitle').textContent='EDIT PRODUCT';
   document.getElementById('addModSub').textContent=esc(item.name);
@@ -2469,7 +2611,7 @@ function saveProduct(){
   scheduleDriveSync();closeAdd();renderDeptTabs();renderMain();
 }
 function removeItem(deptId,itemId){
-  const dept=depts.find(d=>d.id===deptId);if(!dept||!confirm('Remove this product?'))return;
+  const dept=depts.find(d=>String(d.id)===String(deptId));if(!dept||!confirm('Remove this product?'))return;
   dept.items=dept.items.filter(i=>i.id!==itemId);
   scheduleDriveSync();renderDeptTabs();renderMain();
 }
@@ -2489,7 +2631,7 @@ function openDeptMod(){
   document.getElementById('dName').focus();
 }
 function openEditDept(deptId){
-  const dept=depts.find(d=>d.id===deptId);if(!dept)return;
+  const dept=depts.find(d=>String(d.id)===String(deptId));if(!dept)return;
   editingDeptId=deptId;
   document.getElementById('deptModTitle').textContent='EDIT DEPARTMENT';
   document.getElementById('deptModSub').textContent='Rename or recolor "'+dept.name+'"';
@@ -2514,7 +2656,7 @@ function saveDept(){
   if(!name){document.getElementById('dName').focus();return;}
   const color=document.getElementById('dColor').value||'#00e676';
   if(editingDeptId){
-    const dept=depts.find(d=>d.id===editingDeptId);
+    const dept=depts.find(d=>String(d.id)===String(editingDeptId));
     if(dept){
       dept.name=name;dept.color=color;
       scheduleDriveSync();closeDeptMod();
@@ -2528,7 +2670,7 @@ function saveDept(){
   }
 }
 function deleteDept(deptId){
-  const dept=depts.find(d=>d.id===deptId);if(!dept)return;
+  const dept=depts.find(d=>String(d.id)===String(deptId));if(!dept)return;
   if(!confirm(`Delete "${dept.name}"?${dept.items.length?` Has ${dept.items.length} products — cannot be undone.`:''}`))return;
   depts=depts.filter(d=>d.id!==deptId);
   scheduleDriveSync();
@@ -2649,7 +2791,7 @@ function parseAvgPDF(all,el){
   }
 
   const dept=getDept();
-  let updated=0, notFound=0;
+  let updated=0, notFound=0, autoAdded=0;
   const results=[];
 
   const seen=new Set();
@@ -2669,27 +2811,75 @@ function parseAvgPDF(all,el){
     if(!qty||qty<=0) continue;
 
     // Find matching item by UPC
-    const item=dept.items.find(i=>i.upc&&i.upc.replace(/\D/g,'')===u.str.replace(/\D/g,''));
-    if(item){
-      // Update sales history — avg only, NO inventory change
-      if(!item.salesHistory)item.salesHistory=[];
-      const label=dateRange;
-      const ex=item.salesHistory.find(e=>e.weekLabel===label);
-      // Tag as quarterly — never overwritten by weekly uploads
-      if(ex){ex.qty=qty;ex.periodWeeks=periodWeeks;ex.type='quarterly';}
-      else item.salesHistory.push({type:'quarterly',weekLabel:label,qty,periodWeeks});
-      // Keep max 4 quarterly entries (1 year of history)
-      const qEntries=item.salesHistory.filter(e=>e.type==='quarterly');
-      if(qEntries.length>4){
-        const oldestQIdx=item.salesHistory.findIndex(e=>e.type==='quarterly');
-        if(oldestQIdx>=0) item.salesHistory.splice(oldestQIdx,1);
+    let item=dept.items.find(i=>i.upc&&i.upc.replace(/\D/g,'')===u.str.replace(/\D/g,''));
+
+    // Auto-add if not found — extract name and pack/size from the report line
+    let wasNew=false;
+    if(!item){
+      // Extract product name from text tokens on this line (between item# and dollar amounts)
+      const descToks=line.filter(t=>
+        !upcRe.test(t.str)&&!/^\d{4,7}$/.test(t.str)&&
+        !/^\$/.test(t.str)&&!/^[\d,]+$/.test(t.str)&&
+        !/^(CORE|NEW|Deli|Fresh|Frozen|Produce|Grocery|Health|General|Meat)$/i.test(t.str)&&
+        t.str.trim().length>1
+      );
+      let name=descToks.map(t=>t.str).join(' ').trim();
+
+      // Also check adjacent y-lines for description (GO reports sometimes split name to line above)
+      if(!name||name.length<3){
+        const nearLines=all.filter(t=>t.page===u.page&&t.y!==u.y&&Math.abs(t.y-u.y)<=15)
+          .filter(t=>!/^(CORE|NEW|UPC|ITEM|PACK|DESCRIPTION|QUANTITY|SALES|AVERAGE|EST|DEPT)$/i.test(t.str)&&
+                     !/^\$/.test(t.str)&&!/^\d{8,}$/.test(t.str)&&t.str.trim().length>1);
+        if(nearLines.length) name=nearLines.map(t=>t.str).join(' ').trim();
       }
-      const weeklyAvg=(qty/periodWeeks).toFixed(1);
-      results.push({name:item.name,qty,weeklyAvg});
-      updated++;
-    } else {
-      notFound++;
+      if(!name) name=u.str; // fallback to UPC as name
+
+      // Extract pack/size to detect weight items
+      const packTok=line.find(t=>/^\d+\/\d+\.?\d*\s*(LB|OZ|GLL|GL|PT|QT|EA)/i.test(t.str))||
+                    line.find(t=>/^\d+\/\d+\.?\d*(LB|OZ)/i.test(t.str));
+      let isWeight=false, avgPkgWt=null, sizeStr='';
+      if(packTok){
+        const pm=packTok.str.match(/(\d+)\/([\d.]+)\s*(LB|OZ|GLL|GL|PT|QT|EA)/i);
+        if(pm){
+          const sz=parseFloat(pm[2]);
+          const unit=pm[3].toUpperCase();
+          if(unit==='LB'&&sz>=5){isWeight=true;avgPkgWt=sz;}
+          if(unit==='GLL'||unit==='GL')sizeStr=sz===1?'1GAL':'.5GAL';
+          else if(unit==='LB')sizeStr=sz+'LB';
+          else if(unit==='OZ')sizeStr=Math.round(sz)+'OZ';
+          else sizeStr=pm[0];
+        }
+      }
+      if(sizeStr&&name&&!name.includes(sizeStr)) name=name+' '+sizeStr;
+
+      item={
+        id:uid(),name:name.toUpperCase(),upc:u.str,
+        shelfMin:0,backstockMin:0,total:0,
+        isWeightItem:isWeight,avgPackageWeight:avgPkgWt,unitsPerCase:null,
+        deliveryTotal:0,casesReceived:0,throwawayTotal:0,soldTotal:0,
+        deliveryLbs:0,soldLbs:0,manualWeeklyAvg:null,salesHistory:[]
+      };
+      dept.items.push(item);
+      wasNew=true;
+      autoAdded++;
     }
+
+    // Update sales history — avg only, NO inventory change
+    if(!item.salesHistory)item.salesHistory=[];
+    const label=dateRange;
+    const ex=item.salesHistory.find(e=>e.weekLabel===label);
+    // Tag as quarterly — never overwritten by weekly uploads
+    if(ex){ex.qty=qty;ex.periodWeeks=periodWeeks;ex.type='quarterly';}
+    else item.salesHistory.push({type:'quarterly',weekLabel:label,qty,periodWeeks});
+    // Keep max 4 quarterly entries (1 year of history)
+    const qEntries=item.salesHistory.filter(e=>e.type==='quarterly');
+    if(qEntries.length>4){
+      const oldestQIdx=item.salesHistory.findIndex(e=>e.type==='quarterly');
+      if(oldestQIdx>=0) item.salesHistory.splice(oldestQIdx,1);
+    }
+    const weeklyAvg=(qty/periodWeeks).toFixed(1);
+    results.push({name:item.name,qty,weeklyAvg,wasNew});
+    updated++;
   }
 
   if(!updated){
@@ -2706,6 +2896,7 @@ function parseAvgPDF(all,el){
   el.innerHTML=`
     <div style="font-size:11px;font-weight:600;color:#ff6b35;margin-bottom:6px">
       📊 ${updated} products updated · <strong style="color:#40c4ff">${periodWeeks} week period</strong> · weekly averages set
+      ${autoAdded>0?`<span style="color:#a78bfa;font-size:9px;margin-left:6px">✦ ${autoAdded} new added</span>`:''}
     </div>
     <div style="font-size:9px;color:#9099c0;margin-bottom:4px">${esc(dateRange)}</div>
     <div style="font-size:9px;color:#9099c0;margin-bottom:8px">
@@ -2714,11 +2905,10 @@ function parseAvgPDF(all,el){
     <div style="max-height:180px;overflow-y:auto">
       ${results.map(r=>`
         <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #2a2f45;font-size:9px">
-          <span style="color:#dde0e8">${esc(r.name)}</span>
+          <span style="color:${r.wasNew?'#a78bfa':'#dde0e8'}">${r.wasNew?'✦ ':''}${esc(r.name)}${r.wasNew?'<span style="font-size:7px;color:#6068a0"> new</span>':''}</span>
           <span style="color:#ff6b35">${r.qty.toLocaleString()} ÷ ${periodWeeks}wks = <strong style="color:#00e676">${r.weeklyAvg}/wk avg</strong></span>
         </div>`).join('')}
-    </div>
-    ${notFound>0?`<div style="margin-top:8px;font-size:8px;color:#ffab00">⚠ ${notFound} UPCs in this report not found in ${esc(dept.name)} — those products need to be added first</div>`:''}`;
+    </div>`;
 }
 
 
@@ -3221,7 +3411,7 @@ function applyInvoiceRows(rows,el,refOnly){
         id:uid(),name:r.name.toUpperCase(),upc:r.upc||'',
         shelfMin:0,backstockMin:0,total:0,
         isWeightItem:r.isWeight||false,avgPackageWeight:pw,unitsPerCase:null,
-        deliveryTotal:0,throwawayTotal:0,soldTotal:0,
+        deliveryTotal:0,casesReceived:0,throwawayTotal:0,soldTotal:0,
         deliveryLbs:0,soldLbs:0,manualWeeklyAvg:null,salesHistory:[]
       };
       dept.items.push(item);
@@ -3231,6 +3421,7 @@ function applyInvoiceRows(rows,el,refOnly){
     if(!refOnly){
       item.deliveryTotal=(item.deliveryTotal||0)+r.qty;
       item.total=(item.total||0)+r.qty;
+      item.casesReceived=(item.casesReceived||0)+(r.casesReceived||0);
       if(item.isWeightItem)item.deliveryLbs=(item.deliveryLbs||0)+r.qty;
       if(r.unitsPerCase&&r.unitsPerCase>1)item.unitsPerCase=r.unitsPerCase;
       // Never touch soldTotal from delivery upload
@@ -3238,7 +3429,7 @@ function applyInvoiceRows(rows,el,refOnly){
     }
 
     applied++;
-    resultRows.push({name:item.name,qty:r.qty,isWeight:r.isWeight,wasNew});
+    resultRows.push({name:item.name,qty:r.qty,casesReceived:r.casesReceived,unitsPerCase:r.unitsPerCase,isWeight:r.isWeight,wasNew,upc:r.upc||''});
   });
 
   if(applied>0&&!refOnly){
@@ -3260,12 +3451,24 @@ function applyInvoiceRows(rows,el,refOnly){
       ${refOnly?'🔍 Invoice Check':'📦 Delivery Logged'} — ${applied} items read
       ${autoAdded>0?`<span style="color:#a78bfa;font-size:9px;margin-left:6px">✦ ${autoAdded} new added</span>`:''}
     </div>
+    <div style="display:flex;gap:6px;padding:4px 0 6px;border-bottom:1px solid #2e3350;font-size:8px;font-weight:700;color:#6068a0;letter-spacing:.05em">
+      <span style="flex:1">PRODUCT</span>
+      <span style="width:60px;text-align:right">CASES</span>
+      <span style="width:60px;text-align:right">×/CASE</span>
+      <span style="width:70px;text-align:right">ADDED</span>
+    </div>
     <div style="max-height:220px;overflow-y:auto">
-      ${resultRows.map(r=>`
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid #1a1d2e;font-size:10px">
-          <span style="color:${r.wasNew?'#a78bfa':'#dde0e8'}">${r.wasNew?'✦ ':'✅ '}${esc(r.name)}${r.wasNew?'<span style="font-size:8px;color:#6068a0"> new</span>':''}</span>
-          <span style="color:${col};font-weight:700;margin-left:8px">${refOnly?'':'+'}${r.qty} ${r.isWeight?'lbs':'cs'}</span>
-        </div>`).join('')}
+      ${resultRows.map(r=>{
+        const cases=r.casesReceived!=null?r.casesReceived:'?';
+        const perCase=r.isWeight?'weight':(r.unitsPerCase||1);
+        return `
+        <div style="display:flex;gap:6px;align-items:center;padding:4px 0;border-bottom:1px solid #1a1d2e;font-size:10px">
+          <span style="flex:1;color:${r.wasNew?'#a78bfa':'#dde0e8'};overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.wasNew?'✦ ':'✅ '}${esc(r.name)}${r.wasNew?'<span style="font-size:8px;color:#6068a0"> new</span>':''}</span>
+          <span style="width:60px;text-align:right;color:#9099c0">${cases}</span>
+          <span style="width:60px;text-align:right;color:#555">${r.isWeight?'⚖️ lbs':'×'+perCase}</span>
+          <span style="width:70px;text-align:right;color:${col};font-weight:700">${refOnly?'':'+'}${r.qty} ${r.isWeight?'lbs':'units'}</span>
+        </div>`;
+      }).join('')}
     </div>
     ${refOnly?'<div style="margin-top:8px;font-size:9px;color:#555">❌ ON HAND unchanged — use 📦 LOG DELIVERY to update BOH</div>':''}`;
 }
@@ -3745,7 +3948,7 @@ function applyStoredSettings(){
 
 // ══ CLEAN BAD SALES HISTORY ═══════════════════════════════════════════════════
 function cleanSalesHistory(deptId){
-  const dept=depts.find(d=>d.id===deptId);if(!dept)return;
+  const dept=depts.find(d=>String(d.id)===String(deptId));if(!dept)return;
   dept.items.forEach(item=>{
     if(!item.salesHistory||!item.salesHistory.length) return;
     // Remove duplicate entries and fix period weeks
@@ -3780,7 +3983,7 @@ function cleanSalesHistory(deptId){
 
 // ══ SORT & DRAG ════════════════════════════════════════════════════════════════
 function setSortBy(deptId, mode){
-  const dept=depts.find(d=>d.id===deptId);if(!dept)return;
+  const dept=depts.find(d=>String(d.id)===String(deptId));if(!dept)return;
   dept.sortBy=mode;
   if(mode!=='custom'){
     // Sort items array
@@ -3812,7 +4015,7 @@ function dragOver(e){
 }
 function dragDrop(e,deptId){
   e.preventDefault();
-  const dept=depts.find(d=>d.id===deptId);if(!dept)return;
+  const dept=depts.find(d=>String(d.id)===String(deptId));if(!dept)return;
   const targetId=parseInt(e.currentTarget.dataset.iid);
   if(dragSrcId===targetId)return;
   const srcIdx=dept.items.findIndex(i=>i.id===dragSrcId);
@@ -3869,7 +4072,7 @@ function openBOHModal(){
 }
 
 function bohShowAllItems(){
-  const dept = depts.find(d=>d.id===bohDeptId);
+  const dept = depts.find(d=>String(d.id)===String(bohDeptId));
   if(!dept) return;
   const list = document.getElementById('bohResultsList');
   list.innerHTML = dept.items.map(item=>{
@@ -3886,7 +4089,7 @@ function bohShowAllItems(){
 }
 
 function bohSearch(term){
-  const dept = depts.find(d=>d.id===bohDeptId);
+  const dept = depts.find(d=>String(d.id)===String(bohDeptId));
   if(!dept) return;
   const t = term.toLowerCase().trim();
   const list = document.getElementById('bohResultsList');
@@ -3926,7 +4129,7 @@ function bohClearSearch(){
 }
 
 function selectBOHItem(deptId, itemId){
-  const dept = depts.find(d=>d.id===deptId);
+  const dept = depts.find(d=>String(d.id)===String(deptId));
   if(!dept) return;
   const item = dept.items.find(i=>i.id===itemId);
   if(!item) return;
@@ -4071,7 +4274,7 @@ function stopBOHScanner(){
 }
 
 function handleScannedUPC(upc){
-  const dept = depts.find(d=>d.id===bohDeptId);
+  const dept = depts.find(d=>String(d.id)===String(bohDeptId));
   if(!dept) return;
 
   // Try exact match first, then strip leading zeros
@@ -4182,7 +4385,7 @@ function toggleWeightFields(){
 }
 // ══ RESET SOLD TOTALS ═════════════════════════════════════════════════════════
 function confirmResetSold(deptId){
-  const dept=depts.find(d=>d.id===deptId);if(!dept)return;
+  const dept=depts.find(d=>String(d.id)===String(deptId));if(!dept)return;
   if(!confirm(`Reset all SOLD totals to 0 for ${dept.name}?\n\nUse this if you accidentally uploaded the same sales report twice.\nON HAND and averages will NOT be affected.`))return;
   dept.items.forEach(item=>{
     // Add back what was over-subtracted so ON HAND is correct
@@ -4289,7 +4492,7 @@ function bohAdj(n){
 
 function saveBOH(){
   if(!bohDeptId||bohItemId===null) return;
-  const dept=depts.find(d=>d.id===bohDeptId);
+  const dept=depts.find(d=>String(d.id)===String(bohDeptId));
   if(!dept) return;
   const item=dept.items.find(i=>i.id===bohItemId);
   if(!item) return;
